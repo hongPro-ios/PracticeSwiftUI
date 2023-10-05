@@ -35,4 +35,4 @@ func square(_ number: Int) throws -> Int {
     }
 }
 
-square(10000)
+try? square(10000)
