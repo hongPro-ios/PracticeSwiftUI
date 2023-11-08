@@ -25,6 +25,39 @@ enum ConversionType: String, CaseIterable {
 
 enum TemperatureUnit: String, CaseIterable {
     case celsius, fahrenheit, kelvin
+
+    var unitMark: String {
+        switch self {
+        case .celsius:
+            return "°C"
+        case .fahrenheit:
+            return "°F"
+        case .kelvin:
+            return "K"
+        }
+    }
+
+    func convertBaseUnit(value: Double) -> Double {
+        switch self {
+        case .celsius:
+            return value
+        case .fahrenheit:
+            return (value - 32) * 5 / 9
+        case .kelvin:
+            return value - 273.15
+        }
+    }
+
+    func convert(baseUnitValue: Double) -> Double {
+        switch self {
+        case .celsius:
+            return baseUnitValue
+        case .fahrenheit:
+            return (baseUnitValue * 9 / 5) + 32
+        case .kelvin:
+            return baseUnitValue + 273.15
+        }
+    }
 }
 
 enum LengthUnit: String, CaseIterable {
@@ -46,28 +79,8 @@ struct ContentView: View {
     @State private var outputUnit: TemperatureUnit = .celsius
 
     var convertedOutputValue: Double {
-        var baseCelsiusUnitValue: Double = 0
-        var convertedOutputValue: Double = 0
-
-        switch inputUnit {
-        case .celsius:
-            baseCelsiusUnitValue = inputValue
-        case .fahrenheit:
-            baseCelsiusUnitValue = (inputValue - 32) * 5 / 9
-        case .kelvin:
-            baseCelsiusUnitValue = inputValue - 273.15
-        }
-
-        switch outputUnit {
-        case .celsius:
-            convertedOutputValue = baseCelsiusUnitValue
-        case .fahrenheit:
-            convertedOutputValue = (baseCelsiusUnitValue * 9 / 5) + 32
-        case .kelvin:
-            convertedOutputValue = baseCelsiusUnitValue + 273.15
-        }
-
-        return convertedOutputValue
+        let baseUnitValue = inputUnit.convertBaseUnit(value: inputValue)
+        return outputUnit.convert(baseUnitValue: baseUnitValue)
     }
 
     var body: some View {
@@ -91,7 +104,8 @@ struct ContentView: View {
                     HStack {
                         Picker("Conversion", selection: $inputUnit) {
                             ForEach(TemperatureUnit.allCases, id: \.self) {
-                                Text("\($0.rawValue)")
+                                Text("\($0.rawValue)(\($0.unitMark))")
+                                    .font(.subheadline)
                             }
                         }
                         .pickerStyle(.wheel)
@@ -100,7 +114,8 @@ struct ContentView: View {
                         Text(">")
                         Picker("Conversion", selection: $outputUnit) {
                             ForEach(TemperatureUnit.allCases, id: \.self) {
-                                Text("\($0.rawValue)")
+                                Text("\($0.rawValue)(\($0.unitMark))")
+                                    .font(.subheadline)
                             }
                         }
                         .pickerStyle(.wheel)
@@ -111,7 +126,7 @@ struct ContentView: View {
 
             }
             Section("Output") {
-                Text("\(convertedOutputValue)")
+                Text("\(convertedOutputValue)\(outputUnit.unitMark)")
             }
         }
     }
