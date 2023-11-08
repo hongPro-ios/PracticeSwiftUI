@@ -12,6 +12,15 @@ enum ConversionType: String, CaseIterable {
     case length
     case time
     case volume
+
+    var shortName: String {
+        switch self {
+        case .temperature: return "temp"
+        case .length:      return "length"
+        case .time:        return "time"
+        case .volume:      return "vloume"
+        }
+    }
 }
 
 enum TemperatureUnit: String, CaseIterable {
@@ -66,7 +75,7 @@ struct ContentView: View {
             Section("ConversionType") {
                 Picker("Conversion", selection: $conversionType) {
                     ForEach(ConversionType.allCases, id: \.self) {
-                        Text("\($0.rawValue)")
+                        Text("\($0.shortName)")
                     }
                 }
                 .pickerStyle(.segmented)
