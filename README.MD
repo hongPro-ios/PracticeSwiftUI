@@ -19,3 +19,4 @@
 - Day 19: https://www.hackingwithswift.com/100/swiftui/19
 - Day 20: https://www.hackingwithswift.com/100/swiftui/20
 - Day 21: https://www.hackingwithswift.com/100/swiftui/21
+- Day 22: https://www.hackingwithswift.com/100/swiftui/22
